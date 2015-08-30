@@ -1,6 +1,6 @@
 <?php
 
-$libraryXML = fopen("LibrarySample.xml", "r") or die("Unable to open file!");
+$libraryXML = fopen("Library.xml", "r") or die("Unable to open file!");
 
 
 $dictionaryLevel = 0;
@@ -28,6 +28,21 @@ $construct = array(
 	"Track ID"=>array("&lt;integer&gt" , "&lt;/integer&gt"),
 	"Year"=>array("&lt;integer&gt" , "&lt;/integer&gt")
 );
+
+$servername = "localhost";
+$username = "JohnZielinski";
+$password = "Fred891";
+$dbname = "iTunes_analyzer";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} 
+else{
+	echo "DB connection all set <br/>";
+}
 
 //Loop for the base
 while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
@@ -62,9 +77,9 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 			elseif(strpos($line, "dict&gt")){
 				$dictionaryLevel++;
 			
-				echo "<br/>";
-				echo "This is a song<br/>";
-				echo "=====================================================================<br/>";
+				//echo "<br/>";
+				//echo "This is a song<br/>";
+				//echo "=====================================================================<br/>";
 			}
 
 			//echo $line . " - this is line number " . $lineCounter++ . " - it is in loop number " . $dictionaryLevel . "<br/>";
@@ -72,9 +87,16 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 			while($dictionaryLevel == 3){
 				if (strpos($line = htmlentities(fgets($libraryXML)), "/dict&gt;") == true){
 					$dictionaryLevel--;
-					echo "=====================================================================<br/>";
-					echo "INSERT INTO songs (" . substr($queryColumns, 0, strlen($queryColumns) - 2) . ") VALUES (" . substr($queryValues, 0, strlen($queryValues) - 2) . ")";
-					echo "<br/>=====================================================================<br/>";
+					//echo "=====================================================================<br/>";
+					$query = "INSERT INTO songs (" . substr($queryColumns, 0, strlen($queryColumns) - 2) . ") VALUES (" . substr($queryValues, 0, strlen($queryValues) - 2) . ")";
+					//echo "<br/>=====================================================================<br/>";
+					
+					if ($conn->query($query) === TRUE) {
+					    //echo "New record created successfully";
+					} else {
+					    echo "Error: " . $sql . "<br>" . $conn->error;
+					}
+
 					$queryValues = "";
 					$queryColumns = "";
 				}
@@ -93,7 +115,7 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 
 					$value = substr($line, $valueStart, $valueEnd-$valueStart);
 
-					echo $key . ": " . $value . "<br/>";
+					//echo $key . ": " . $value . "<br/>";
 
 					$queryColumns = $queryColumns . str_replace(" ", "", $key) . ", ";
 					$queryValues = $queryValues . "\"" . $value . "\", ";
