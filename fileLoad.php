@@ -1,6 +1,8 @@
 <?php
 
-$libraryXML = fopen("Library.xml", "r") or die("Unable to open file!");
+include("DBHelper.php");
+
+$libraryXML = fopen("XMLs/Library.xml", "r") or die("Unable to open file!");
 
 $size = fstat($libraryXML)[7];
 
@@ -42,20 +44,24 @@ $construct = array(
 	"Year"=>array("&lt;integer&gt" , "&lt;/integer&gt")
 );
 
-$servername = "localhost";
-$username = "JohnZielinski";
-$password = "Fred891";
-$dbname = "iTunes_analyzer";
+$dbObject = new db();
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
-else{
-	//echo "DB connection all set <br/>";
-}
+$conn = $dbObject->createConnection();
+
+// $servername = "localhost";
+// $username = "JohnZielinski";
+// $password = "Fred891";
+// $dbname = "iTunes_analyzer";
+
+// // Create connection
+// $conn = new mysqli($servername, $username, $password, $dbname);
+// // Check connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// } 
+// else{
+// 	//echo "DB connection all set <br/>";
+// }
 
 $timeStart = microtime(true);
 
