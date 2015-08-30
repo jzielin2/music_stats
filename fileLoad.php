@@ -2,6 +2,19 @@
 
 $libraryXML = fopen("Library.xml", "r") or die("Unable to open file!");
 
+$size = fstat($libraryXML)[7];
+
+if($size < 1024)
+	echo "File size: " . $size . " B."  . "<br/>";
+else if($size/1024 < 1024)
+	echo "File size: " . round($size/1024,2) . " KB." . "<br/>";
+else if($sizeMB = $size/1024/1024 < 1024)
+	echo "File size: " . round($size/1024/1024,2) . " MB." . "<br/>";
+else if($sizeGB = $size/1024/1024/1024 < 1024)
+	echo "File size: " . round($size/1024/1024/1024,2) . " GB." . "<br/>";
+else
+	echo "File too big";
+
 
 $dictionaryLevel = 0;
 $complete = false;
@@ -41,8 +54,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 else{
-	echo "DB connection all set <br/>";
+	//echo "DB connection all set <br/>";
 }
+
+$timeStart = microtime(true);
 
 //Loop for the base
 while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
@@ -72,6 +87,10 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 			if (strpos($line = htmlentities(fgets($libraryXML)), "/dict&gt;") == true){
 				$dictionaryLevel--;
 				$complete = true;
+
+				$totalTime = microtime(true) - $timeStart;
+
+				echo "Total processing time: " . round($totalTime, 2) . " seconds.";
 				break;
 			}
 			elseif(strpos($line, "dict&gt")){
@@ -128,21 +147,5 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 }
 
 fclose($libraryXML);
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// while ($dictPos < 100){
-
-// $line = htmlentities(fgets($libraryXML));
-// echo $line . "<br/>";
-// if (strpos($line, "/dict&gt;")){
-// 	echo "found it";
-// }
-// $dictPos++;
-// }
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
 
 ?>
