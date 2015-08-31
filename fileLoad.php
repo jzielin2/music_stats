@@ -44,24 +44,9 @@ $construct = array(
 	"Year"=>array("&lt;integer&gt" , "&lt;/integer&gt")
 );
 
+//Connect to the DB
 $dbObject = new db();
-
-$conn = $dbObject->createConnection();
-
-// $servername = "localhost";
-// $username = "JohnZielinski";
-// $password = "Fred891";
-// $dbname = "iTunes_analyzer";
-
-// // Create connection
-// $conn = new mysqli($servername, $username, $password, $dbname);
-// // Check connection
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// } 
-// else{
-// 	//echo "DB connection all set <br/>";
-// }
+$connection = $dbObject->createConnection();
 
 $timeStart = microtime(true);
 
@@ -116,7 +101,7 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 					$query = "INSERT INTO songs (" . substr($queryColumns, 0, strlen($queryColumns) - 2) . ") VALUES (" . substr($queryValues, 0, strlen($queryValues) - 2) . ")";
 					//echo "<br/>=====================================================================<br/>";
 					
-					if ($conn->query($query) === TRUE) {
+					if ($connection->query($query) === TRUE) {
 					    //echo "New record created successfully";
 					} else {
 					    echo "Error: " . $sql . "<br>" . $conn->error;
