@@ -7,7 +7,7 @@ include("chartHelper.php");
 $database = new db();
 $chartHelper = new chartHelper();
 
-$connection = $database->createConnection();
+$database->createConnection();
 
 $chartHelper->setColors(array("#369AD9", "#F2F2F2", "#1FBF92", "#F2B705", "#33DB1F"));
 

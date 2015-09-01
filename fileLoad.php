@@ -22,8 +22,8 @@ $dictionaryLevel = 0;
 $complete = false;
 $songCounter = 1;
 $lineCounter = 1;
-$queryColumns = "";
-$queryValues = "";
+$queryColumns = array();
+$queryValues = array();
 
 $construct = array(
 	"Album"=>array("&lt;string&gt" , "&lt;/string&gt"),
@@ -97,18 +97,11 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 			while($dictionaryLevel == 3){
 				if (strpos($line = htmlentities(fgets($libraryXML)), "/dict&gt;") == true){
 					$dictionaryLevel--;
-					//echo "=====================================================================<br/>";
-					$query = "INSERT INTO songs (" . substr($queryColumns, 0, strlen($queryColumns) - 2) . ") VALUES (" . substr($queryValues, 0, strlen($queryValues) - 2) . ")";
-					//echo "<br/>=====================================================================<br/>";
-					
-					if ($connection->query($query) === TRUE) {
-					    //echo "New record created successfully";
-					} else {
-					    echo "Error: " . $sql . "<br>" . $conn->error;
-					}
 
-					$queryValues = "";
-					$queryColumns = "";
+					$dbObject->insertRawiTunesData($queryColumns, $queryValues);
+
+					$queryValues = array();
+					$queryColumns = array();
 				}
 				elseif(strpos($line, "dict&gt")){
 					$dictionaryLevel++;
@@ -127,8 +120,8 @@ while ($dictionaryLevel == 0 && ! feof($libraryXML) && ! $complete){
 
 					//echo $key . ": " . $value . "<br/>";
 
-					$queryColumns = $queryColumns . str_replace(" ", "", $key) . ", ";
-					$queryValues = $queryValues . "\"" . $value . "\", ";
+					$queryColumns[] = str_replace(" ", "", $key);
+					$queryValues[] = $value;
 
 					//echo $line . " - this is line number " . $lineCounter++ . " - it is in loop number " . $dictionaryLevel . " - the key value is " . $start . "|" . $end . "|" . $key . "|". $valueStart . "|" . $valueEnd . "|" . $value . "<br/>";
 				}

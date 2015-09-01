@@ -21,7 +21,7 @@ class chartHelper {
 		$data = array();
 		$colorCounter = 0;
 
-		while ($row = $queryResultObject->fetch_assoc()){
+		while ($row = $queryResultObject->fetch(PDO::FETCH_ASSOC)){
 		  $data[] = array("value" => $row["value"], "color" => $this->colors[$colorCounter], "highlight" => $this->highlights[$colorCounter], "label" => $row["label"]);
 		  $colorCounter++;
 		}
