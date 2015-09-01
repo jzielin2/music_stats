@@ -9,8 +9,6 @@ class db{
 
 	public $connection;
 	public $graphData = array();
-	public $colors = array("#369AD9", "#F2F2F2", "#1FBF92", "#F2B705", "#F24141");
-	public $highlights = array("#3088BF", "#DEDEDE", "#1CAD85", "#E3AC05", "#E33D3D");
 
 	//////////////////////////////////////////////////////////////////
 	//  Creates a connection to the DB based on the parameters above.
@@ -45,33 +43,12 @@ class db{
 		if (!$result){
 			$message  = 'Invalid query: ' . mysql_error() . "\n" . 'Whole query: ' . $query;
 		  die($message);
+		  return 0;
 		}
 		
-		$this->createDataObject($result);
+		//$this->createDataObject($result);
 
-		return $this->graphData;
-
-	}
-
-	//////////////////////////////////////////////////////////////////
-	//  Takes as input a mysql query object and returns a formatted
-	//  json object that can be used with Chart.js.  Need to figure
-	//  out how to pass in color codes, or if this will be defined 
-	//  differently.
-	//////////////////////////////////////////////////////////////////
-	private function createDataObject($queryResult){
-		
-		$data = array();
-		$colorCounter = 0;
-
-		while ($row = $queryResult->fetch_assoc()){
-		  $data[] = array("value" => $row["value"], "color" => $this->colors[$colorCounter], "highlight" => $this->highlights[$colorCounter], "label" => $row["label"]);
-		  $colorCounter++;
-		}
-
-		$this->graphData = json_encode($data);
-
-		return 0;
+		return $result;
 
 	}
 
