@@ -21,7 +21,7 @@ class db{
 		return $this->connection;
 	}
 
-	
+
 	public function insertRawiTunesData($columns, $values){
 		
 		//Strings / array we'll used to dynamically build the prepared statement
@@ -60,6 +60,13 @@ class db{
 
 		return $result;
 
+	}
+
+	public function getTopSongsByPlayCount(){
+		$query = "select `Name` as 'label', sum(PlayCount) AS 'value' from songs group by `Name` order by 2 desc limit 5;";
+		$result = $this->connection->query($query);
+
+		return $result;
 	}
 
 }
